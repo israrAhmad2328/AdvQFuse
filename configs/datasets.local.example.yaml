@@ -1,0 +1,15 @@
+# Copy this file to configs/datasets.local.yaml and edit paths if your data lives elsewhere.
+# Relative paths are resolved from the current working directory.
+datasets:
+  earthvqa:
+    root: data/raw/earthvqa/EarthVQA
+  floodnet:
+    root: data/raw/floodnet/FloodNet_VQA
+  rsvqa_hr:
+    root: data/raw/rsvqa_hr
+  rsvqa_lr:
+    root: data/raw/rsvqa_lr
+  uav_obb:
+    root: data/raw/uav_obb
+  sen12ms:
+    root: data/raw/sen12ms

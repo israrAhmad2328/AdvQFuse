@@ -1,0 +1,94 @@
+project:
+  name: AdvQFuse-TPAMI
+  title: "Quantization as a Reliability Probe: Precision-Path Risk Control for Vision-Language Models under Adversarial and Distribution Shift"
+  seed_list: [11, 23, 47, 89, 131]
+  synthetic_demo_only: false
+
+models:
+  minimum_independent_families: 4
+  main_families:
+    - name: qwen2_5_vl
+      checkpoints: ["3B", "7B"]
+    - name: llava_onevision
+      checkpoints: ["7B"]
+    - name: internvl2_5
+      checkpoints: ["4B_or_8B"]
+    - name: minicpm_v
+      checkpoints: ["2.6"]
+  extreme_case_study:
+    - name: bonsai
+      checkpoints: ["27B_binary", "27B_ternary"]
+  precision_ladder: ["bf16", "int8", "int4", "int3_or_int2"]
+  require_same_base_checkpoint_for_controlled_path: true
+
+features:
+  output_path:
+    adjacent_js: true
+    adjacent_l1: true
+    total_variation: true
+    curvature: true
+    rank_flips: true
+    minimum_margin: true
+    margin_erosion: true
+    entropy_statistics: true
+  semantic_path:
+    answer_embedding_drift: true
+    exact_answer_flip: true
+  representation_path:
+    hidden_state_cosine_drift: true
+    modality_reliance_drift: true
+  counterfactuals:
+    image_masking: true
+    view_augmentation: true
+    prompt_paraphrase: true
+    negation_control: true
+    modality_dropout: true
+    cross_modal_contradiction: true
+    ocr_suppression: true
+
+controller:
+  actions: ["accept", "reobserve", "escalate", "ensemble", "abstain"]
+  risk_targets: [0.01, 0.02, 0.05, 0.10]
+  delta: 0.05
+  min_group_samples: 50
+  group_robust: true
+  account_for_all_probe_costs: true
+
+benchmarks:
+  generic_majority_required: true
+  remote_sensing_max_fraction: 0.30
+  datasets:
+    vqa: ["VQAv2", "GQA"]
+    text_rich: ["TextVQA"]
+    science: ["ScienceQA-image"]
+    hallucination: ["POPE"]
+    recognition_shift: ["ImageNet-A", "ImageNet-R", "ImageNet-C"]
+    specialized_transfer: ["EarthVQA_or_RSVQA-HR", "FloodNet"]
+  shifts:
+    - clean
+    - common_corruption
+    - natural_distribution_shift
+    - white_box_image_attack
+    - transfer_image_attack
+    - query_black_box_attack
+    - adversarial_patch
+    - adversarial_text
+    - instruction_injection
+    - cross_modal_contradiction
+    - modality_dropout
+
+splits:
+  leave_one_model_family_out: true
+  leave_one_dataset_out: true
+  leave_one_attack_family_out: true
+  generic_to_remote_sensing_transfer: true
+  no_sub2bit_training_to_bonsai_test: true
+
+reporting:
+  bootstrap_repetitions: 2000
+  confidence_level: 0.95
+  paired_tests: true
+  multiple_comparison_correction: "holm"
+  report_latency_memory_energy: true
+  report_per_group_risk_violations: true
+  forbid_synthetic_results_in_paper: true

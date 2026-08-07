@@ -1,0 +1,76 @@
+project:
+  name: AdvQFuse-RS
+  title: "Quantization Disagreement as a Reliability Signal for Adversarially Robust Remote-Sensing Vision-Language Models at the Edge"
+  target_venue_primary: Information Fusion
+  target_venue_extension: IEEE TPAMI
+
+hardware:
+  gpu: "RTX 4060 Ti 16GB"
+  execution: sequential_precision_servers
+  note: "Do not keep binary and ternary 27B models resident concurrently unless memory telemetry proves it is safe."
+
+datasets:
+  pilot:
+    - EarthVQA
+    - FloodNet
+    - UAV-OBB-QA
+  main:
+    - RSVQA-HR
+    - EarthVQA
+    - FloodNet
+    - UAV-OBB-QA
+    - SEN12MS-QA
+  optional_extension:
+    - RSVQA-LR
+    - LEVIR-CD-QA
+
+attacks:
+  visual_transfer:
+    surrogate_models: ["Qwen2.5-VL-3B-Instruct", "LLaVA-1.6-7B"]
+    methods: [FGSM, PGD, adversarial_patch]
+    epsilon: [0.0039, 0.0078, 0.0157, 0.0314]
+    patch_area: [0.01, 0.025, 0.05, 0.08]
+  black_box:
+    methods: [SPSA_patch]
+    query_budgets: [100, 250, 500, 1000]
+  text:
+    methods: [distractor, negation, spatial_swap, answer_anchor]
+  cross_modal:
+    methods: [sensor_conflict, image_instruction_overlay, modality_dropout, misregistration]
+  remote_sensing_corruptions:
+    methods: [cloud, haze, speckle, blur, low_light, compression, occlusion]
+    severities: [1, 2, 3, 4, 5]
+
+controller:
+  target_risk: 0.05
+  delta: 0.05
+  actions: [accept_binary, reobserve, escalate_ternary, abstain]
+  features:
+    - sensor_uncertainty
+    - semantic_conflict
+    - binary_entropy
+    - binary_margin
+    - quantization_disagreement_prediction
+    - precision_flip_probability
+    - attack_detector_score
+
+metrics:
+  task: [accuracy, macro_f1, count_rmse, exact_match]
+  robustness: [attack_success_rate, robust_accuracy, relative_robustness_drop, transfer_rate]
+  reliability: [auroc_failure, aupr_failure, aurc, ece, brier, selective_risk, coverage]
+  efficiency: [latency_ms, energy_j, peak_vram_mb, tokens_per_second, normalized_cost]
+  statistics: [paired_bootstrap_ci, permutation_test, effect_size]
+
+visualizations:
+  - attack_severity_curves
+  - risk_coverage
+  - reliability_diagram
+  - transfer_matrix
+  - accuracy_latency_energy_pareto
+  - uncertainty_violin
+  - cross_dataset_radar
+  - policy_flow
+  - patch_robustness_surface
+  - bootstrap_forest
+  - failure_taxonomy
+  - uncertainty_embedding

@@ -1,0 +1,13 @@
+datasets:
+  earthvqa:
+    root: /content/EarthVQA
+  floodnet:
+    root: /content/FloodNet_VQA
+  rsvqa_hr:
+    root: /content/AdvQFuse_TPAMI_v4/data/raw/rsvqa_hr
+  rsvqa_lr:
+    root: /content/AdvQFuse_TPAMI_v4/data/raw/rsvqa_lr
+  uav_obb:
+    root: "/content/uav-obb-urban-vehicle-detection-dataset/UAV-OBB An Aerial Urban Vehicle Dataset with Orien/UAV-OBB/UAV-OBB"
+  sen12ms:
+    root: /content/sen12ms_qa

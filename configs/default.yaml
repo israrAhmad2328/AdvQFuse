@@ -1,0 +1,21 @@
+seed: 42
+classes: 6
+risk:
+  target_error: 0.10
+  delta: 0.05
+  min_accepted: 50
+fusion:
+  evidence_strength: 18.0
+  conflict_temperature: 3.0
+policy:
+  reperception_quality_threshold: 0.45
+  max_cost: 5.0
+  costs:
+    binary: 1.0
+    reperception: 0.8
+    ternary: 2.2
+    abstain: 0.0
+bonsai:
+  binary_endpoint: "http://127.0.0.1:8081/v1/chat/completions"
+  ternary_endpoint: "http://127.0.0.1:8082/v1/chat/completions"
+  timeout_seconds: 180
